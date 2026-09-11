@@ -111,13 +111,13 @@ export default function DashboardOverview({
             {isLoading ? '...' : totalSongs}
           </div>
           <div className="text-xs font-semibold text-slate-700 mt-1">Total Song Library</div>
-          <div className="text-[11px] text-slate-500 mt-0.5">
+          {/* <div className="text-[11px] text-slate-500 mt-0.5">
             {publishedSongs} published · {draftSongs} drafts
-          </div>
+          </div> */}
         </div>
 
         {/* Published Ratio */}
-        <div
+        {/* <div
           onClick={() => onNavigate('songs')}
           className="glass-panel p-4 sm:p-5 rounded-2xl hover:border-lime-300 hover:shadow-md transition-all cursor-pointer group"
         >
@@ -132,7 +132,7 @@ export default function DashboardOverview({
           </div>
           <div className="text-xs font-semibold text-slate-700 mt-1">Live in Mobile App</div>
           <div className="text-[11px] text-lime-700 font-medium mt-0.5">Active & Searchable</div>
-        </div>
+        </div> */}
 
         {/* Notifications */}
         <div

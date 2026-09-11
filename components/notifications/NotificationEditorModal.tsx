@@ -51,12 +51,12 @@ export default function NotificationEditorModal({
         setYoutubeUrl(notification.youtube_url || '');
       } else {
         const todayStr = new Date().toISOString().split('T')[0];
-        setTitle('ஞாயிறு ஆராதனை');
-        setPreacherName('Rev. எட்வின் சத்தியநாதன்');
-        setScriptureText('தானியுள்ள ஜீவியம்');
+        setTitle('');
+        setPreacherName('');
+        setScriptureText('');
         setNotificationDate(todayStr);
-        setDescription('Join us for live worship and sermon.');
-        setYoutubeUrl('https://www.youtube.com/watch?v=');
+        setDescription('');
+        setYoutubeUrl('');
       }
       setYoutubeError(null);
     }
