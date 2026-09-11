@@ -97,7 +97,7 @@ export default function NotificationManager() {
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-slate-900 mt-1">
-            Worship Service Alerts & Notifications
+            Announcement & Notifications
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
             Broadcast Sunday worship live links, preachers, and scripture texts directly to congregation mobile phones.

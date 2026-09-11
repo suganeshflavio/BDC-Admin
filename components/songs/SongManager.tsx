@@ -149,7 +149,7 @@ export default function SongManager({
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-slate-900 mt-1">
-            Songs & Hymns Management
+            Songs and Lyric Management
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
             Create and edit song lyrics in Tamil and English with nested verses and chorus ordering.
@@ -227,7 +227,7 @@ export default function SongManager({
                   <th className="py-3 px-4">#</th>
                   <th className="py-3 px-4">Song Title (Tamil)</th>
                   <th className="py-3 px-4">English / Thanglish</th>
-                  <th className="py-3 px-4 text-center">Verses</th>
+                  <th className="py-3 px-4 text-center">Stanza</th>
                   <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
               </thead>
