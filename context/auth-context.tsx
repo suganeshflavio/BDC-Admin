@@ -12,7 +12,7 @@ interface AuthContextType {
   isAdmin: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: (options?: boolean | unknown) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -25,14 +25,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { errorToast, successToast } = useToast();
 
-  const logout = useCallback(() => {
+  const logout = useCallback((options?: boolean | unknown) => {
     setUser(null);
     setTokenState(null);
     setStoredToken(null);
     if (typeof window !== 'undefined') {
       localStorage.removeItem(USER_STORAGE_KEY);
     }
-    successToast('You have been logged out.');
+    const shouldToast = options === false ? false : true;
+    if (shouldToast) {
+      successToast('You have been logged out.');
+    }
   }, [successToast]);
 
   // Restore session from localStorage on initial load
@@ -46,7 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUser(parsedUser);
           setTokenState(storedToken);
         } else {
-          logout();
+          logout(false);
         }
       }
     } catch (e) {
@@ -59,8 +62,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Listen for unauthorized 401 events dispatched from api.ts
   useEffect(() => {
     const handleUnauthorized = () => {
-      errorToast('Session expired or unauthorized. Please sign in again.');
-      logout();
+      if (getStoredToken()) {
+        errorToast('Session expired. Please sign in again.');
+        logout(false);
+      }
     };
 
     window.addEventListener('church-auth-unauthorized', handleUnauthorized);

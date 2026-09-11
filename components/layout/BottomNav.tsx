@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { LayoutDashboard, Music, Bell, Building2, Users } from 'lucide-react';
+import { LayoutDashboard, Music, Bell, Building2 } from 'lucide-react';
 import { NavTab } from './Sidebar';
 
 interface BottomNavProps {
@@ -17,7 +17,6 @@ export default function BottomNav({
   onSelectTab,
   songsCount = 0,
   notificationsCount = 0,
-  usersCount = 0,
 }: BottomNavProps) {
   const tabs = [
     {
@@ -38,12 +37,6 @@ export default function BottomNav({
       badge: notificationsCount > 0 ? notificationsCount : undefined,
     },
     {
-      id: 'users' as NavTab,
-      label: 'Users',
-      icon: Users,
-      badge: usersCount > 0 ? usersCount : undefined,
-    },
-    {
       id: 'about' as NavTab,
       label: 'Church',
       icon: Building2,
@@ -51,7 +44,7 @@ export default function BottomNav({
   ];
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#090d16]/95 backdrop-blur-xl border-t border-slate-800/90 pb-safe shadow-2xl">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-sky-100 pb-safe shadow-xl">
       <div className="flex items-center justify-around h-16 px-2">
         {tabs.map((tab) => {
           const Icon = tab.icon;
@@ -61,24 +54,24 @@ export default function BottomNav({
               key={tab.id}
               onClick={() => onSelectTab(tab.id)}
               className={`relative flex flex-col items-center justify-center flex-1 h-full py-1 transition-all ${
-                isActive ? 'text-indigo-400' : 'text-slate-400 hover:text-slate-200'
+                isActive ? 'text-sky-600' : 'text-slate-400 hover:text-sky-600'
               }`}
             >
               {/* Active indicator bar at top */}
               {isActive && (
-                <span className="absolute top-0 w-8 h-1 bg-gradient-to-r from-indigo-500 to-amber-400 rounded-full" />
+                <span className="absolute top-0 w-8 h-1 bg-gradient-to-r from-sky-500 to-lime-500 rounded-full shadow-sm shadow-sky-500/30" />
               )}
 
               <div className="relative">
-                <Icon className={`w-5 h-5 transition-transform ${isActive ? 'scale-110 text-indigo-400' : ''}`} />
+                <Icon className={`w-5 h-5 transition-transform ${isActive ? 'scale-110 text-sky-600' : ''}`} />
                 {tab.badge !== undefined && (
-                  <span className="absolute -top-1.5 -right-2.5 px-1.5 py-0.2 rounded-full text-[9px] font-extrabold bg-indigo-600 text-white min-w-[16px] text-center border border-[#090d16]">
+                  <span className="absolute -top-1.5 -right-2.5 px-1.5 py-0.2 rounded-full text-[9px] font-extrabold bg-lime-400 text-slate-950 min-w-[16px] text-center border border-white shadow-sm">
                     {tab.badge}
                   </span>
                 )}
               </div>
 
-              <span className={`text-[10px] mt-1 font-medium ${isActive ? 'text-white font-semibold' : ''}`}>
+              <span className={`text-[10px] mt-1 font-medium ${isActive ? 'text-slate-900 font-bold' : ''}`}>
                 {tab.label}
               </span>
             </button>

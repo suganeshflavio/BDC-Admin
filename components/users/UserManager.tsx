@@ -107,27 +107,25 @@ export default function UserManager() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-12 animate-in fade-in duration-300">
-      {/* Top Header Card */}
-      <div className="glass-panel p-6 rounded-2xl border border-slate-800 bg-[#090d16]/70 backdrop-blur-xl relative overflow-hidden">
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-indigo-600/10 rounded-full blur-[100px] pointer-events-none" />
+      {/* Top Header Banner in Logo Ocean/Sky Gradient with Lime Accent */}
+      <div className="p-6 rounded-2xl bg-gradient-to-r from-sky-600 via-sky-700 to-blue-800 border border-sky-400/20 shadow-xl text-white relative overflow-hidden">
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-lime-400/15 rounded-full blur-[100px] pointer-events-none" />
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 via-sky-600 to-emerald-400 p-0.5 shadow-lg shadow-indigo-950/50">
-              <div className="w-full h-full bg-[#0d1322] rounded-[14px] flex items-center justify-center">
-                <Users className="w-6 h-6 text-indigo-400" />
-              </div>
+            <div className="w-12 h-12 rounded-2xl bg-white/15 backdrop-blur-md border border-white/25 flex items-center justify-center text-white shadow-lg">
+              <Users className="w-6 h-6 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
                   User Management
                 </h1>
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-500/20 border border-indigo-500/30 text-indigo-300">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-lime-400 text-slate-950">
                   {meta.total_count || users.length} {meta.total_count === 1 ? 'Account' : 'Accounts'}
                 </span>
               </div>
-              <p className="text-xs sm:text-sm text-slate-400 mt-1">
+              <p className="text-xs sm:text-sm text-sky-100 mt-1">
                 Register and manage admin and member accounts
               </p>
             </div>
@@ -138,15 +136,15 @@ export default function UserManager() {
               type="button"
               onClick={() => fetchUsers(currentPage)}
               disabled={isLoading}
-              className="p-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-700/80 transition-colors disabled:opacity-50"
+              className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-colors disabled:opacity-50 backdrop-blur-md"
               title="Refresh users list"
             >
-              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin text-indigo-400' : ''}`} />
+              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin text-lime-300' : ''}`} />
             </button>
             <button
               type="button"
               onClick={() => setIsAddModalOpen(true)}
-              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-semibold text-xs sm:text-sm shadow-lg shadow-indigo-600/30 active:scale-95 transition-all"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold text-xs sm:text-sm shadow-lg shadow-lime-400/20 active:scale-95 transition-all"
             >
               <UserPlus className="w-4 h-4" />
               <span>Add New User</span>
@@ -157,15 +155,15 @@ export default function UserManager() {
 
       {/* Error Alert with Retry */}
       {error && (
-        <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-500/30 text-rose-200 text-xs flex items-center justify-between gap-3 shadow-sm">
+        <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center justify-between gap-3 shadow-sm">
           <div className="flex items-center gap-2.5 min-w-0">
-            <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />
+            <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
             <span className="truncate">{error}</span>
           </div>
           <button
             type="button"
             onClick={() => fetchUsers(currentPage)}
-            className="px-3 py-1.5 rounded-lg bg-rose-900/60 hover:bg-rose-900 text-rose-100 font-medium text-xs shrink-0 transition-colors"
+            className="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-medium text-xs shrink-0 transition-colors"
           >
             Retry
           </button>
@@ -183,11 +181,11 @@ export default function UserManager() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by name, email, phone, or ID..."
-            className="w-full pl-10 pr-4 py-2.5 bg-slate-900/80 border border-slate-700/80 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-xs sm:text-sm transition-all"
+            className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 text-xs sm:text-sm transition-all shadow-sm"
           />
         </div>
 
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-900/80 border border-slate-800">
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-white border border-slate-200 shadow-sm">
           {(['all', 'admin', 'user'] as const).map((role) => (
             <button
               key={role}
@@ -195,8 +193,8 @@ export default function UserManager() {
               onClick={() => setRoleFilter(role)}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${
                 roleFilter === role
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
               {role === 'all' ? 'All Roles' : `${role}s`}
@@ -211,29 +209,29 @@ export default function UserManager() {
           {[1, 2, 3, 4, 5, 6].map((idx) => (
             <div
               key={idx}
-              className="glass-panel p-5 rounded-2xl border border-slate-800/80 bg-[#0d1322]/80 space-y-4 animate-pulse"
+              className="p-5 rounded-2xl border border-sky-100 bg-white space-y-4 animate-pulse shadow-sm"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-slate-800" />
+                <div className="w-10 h-10 rounded-xl bg-slate-100" />
                 <div className="space-y-1.5 flex-1">
-                  <div className="h-3.5 bg-slate-800 rounded w-28" />
-                  <div className="h-2.5 bg-slate-800 rounded w-16" />
+                  <div className="h-3.5 bg-slate-100 rounded w-28" />
+                  <div className="h-2.5 bg-slate-100 rounded w-16" />
                 </div>
               </div>
               <div className="space-y-2 pt-2">
-                <div className="h-7 bg-slate-800/60 rounded-xl" />
-                <div className="h-7 bg-slate-800/60 rounded-xl" />
+                <div className="h-7 bg-slate-50 rounded-xl" />
+                <div className="h-7 bg-slate-50 rounded-xl" />
               </div>
             </div>
           ))}
         </div>
       ) : filteredUsers.length === 0 ? (
-        <div className="p-12 text-center rounded-2xl border border-dashed border-slate-800 bg-slate-900/40">
-          <div className="w-12 h-12 rounded-2xl bg-slate-800/80 mx-auto flex items-center justify-center text-slate-500 mb-3">
+        <div className="p-12 text-center rounded-2xl border border-dashed border-sky-200 bg-white shadow-sm">
+          <div className="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 mx-auto flex items-center justify-center mb-3">
             <Users className="w-6 h-6" />
           </div>
-          <h3 className="text-base font-semibold text-white">No Users Found</h3>
-          <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+          <h3 className="text-base font-semibold text-slate-900">No Users Found</h3>
+          <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
             {searchQuery || roleFilter !== 'all'
               ? 'No user accounts match your active search filters.'
               : 'No users have been returned from the server.'}
@@ -241,7 +239,7 @@ export default function UserManager() {
           <button
             type="button"
             onClick={() => setIsAddModalOpen(true)}
-            className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md shadow-indigo-600/20 transition-all"
+            className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white text-xs font-semibold shadow-md shadow-sky-500/20 transition-all"
           >
             <UserPlus className="w-3.5 h-3.5" />
             <span>Add First User</span>
@@ -257,34 +255,34 @@ export default function UserManager() {
             return (
               <div
                 key={user.id || user.email}
-                className="glass-panel p-5 rounded-2xl border border-slate-800/90 bg-[#0d1322]/80 hover:border-slate-700 transition-all group flex flex-col justify-between space-y-4 shadow-lg shadow-black/20"
+                className="p-5 rounded-2xl border border-sky-100 bg-white hover:border-sky-300 hover:shadow-md transition-all group flex flex-col justify-between space-y-4 shadow-sm"
               >
                 <div>
                   {/* Top Card Row */}
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
                       <div
-                        className={`w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-md shrink-0 ${
+                        className={`w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-sm shrink-0 ${
                           isAdmin
-                            ? 'bg-gradient-to-br from-indigo-500 to-purple-600 shadow-indigo-950/40'
-                            : 'bg-gradient-to-br from-sky-500 to-blue-600 shadow-sky-950/40'
+                            ? 'bg-gradient-to-br from-sky-500 to-blue-600'
+                            : 'bg-gradient-to-br from-lime-500 to-emerald-600'
                         }`}
                       >
                         {initial}
                       </div>
                       <div className="min-w-0">
-                        <h4 className="text-sm font-bold text-white truncate group-hover:text-indigo-300 transition-colors flex items-center gap-1.5">
+                        <h4 className="text-sm font-bold text-slate-900 truncate group-hover:text-sky-600 transition-colors flex items-center gap-1.5">
                           <span>{user.name}</span>
                           {isAdmin && (
-                            <ShieldCheck className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                            <ShieldCheck className="w-3.5 h-3.5 text-sky-600 shrink-0" />
                           )}
                         </h4>
                         <div className="flex items-center gap-1.5 mt-0.5">
                           <span
                             className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-md border ${
                               isAdmin
-                                ? 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30'
-                                : 'bg-slate-800 text-slate-300 border-slate-700'
+                                ? 'bg-sky-50 text-sky-700 border-sky-200'
+                                : 'bg-slate-100 text-slate-700 border-slate-200'
                             }`}
                           >
                             {user.role || 'user'}
@@ -292,13 +290,13 @@ export default function UserManager() {
                           <span
                             className={`text-[10px] font-semibold px-2 py-0.5 rounded-md flex items-center gap-1 border ${
                               isActive
-                                ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20'
-                                : 'bg-rose-500/10 text-rose-300 border-rose-500/20'
+                                ? 'bg-lime-50 text-lime-800 border-lime-200'
+                                : 'bg-rose-50 text-rose-800 border-rose-200'
                             }`}
                           >
                             <span
                               className={`w-1.5 h-1.5 rounded-full ${
-                                isActive ? 'bg-emerald-400' : 'bg-rose-400'
+                                isActive ? 'bg-lime-500' : 'bg-rose-500'
                               }`}
                             />
                             <span>{isActive ? 'Active' : 'Inactive'}</span>
@@ -307,7 +305,7 @@ export default function UserManager() {
                       </div>
                     </div>
 
-                    <span className="text-[10px] font-mono text-slate-500">
+                    <span className="text-[10px] font-mono text-slate-400">
                       #{user.id}
                     </span>
                   </div>
@@ -315,19 +313,19 @@ export default function UserManager() {
                   {/* User Contact Details */}
                   <div className="mt-4 space-y-2 text-xs">
                     {/* Email */}
-                    <div className="flex items-center justify-between p-2 rounded-xl bg-slate-900/60 border border-slate-800/60">
+                    <div className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
                       <div className="flex items-center gap-2 min-w-0">
                         <Mail className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                        <span className="text-slate-200 truncate">{user.email}</span>
+                        <span className="text-slate-700 truncate">{user.email}</span>
                       </div>
                       <button
                         type="button"
                         onClick={() => handleCopy(user.email, `email-${user.id}`)}
-                        className="p-1 text-slate-400 hover:text-white transition-colors"
+                        className="p-1 text-slate-400 hover:text-slate-700 transition-colors"
                         title="Copy email"
                       >
                         {copiedField === `email-${user.id}` ? (
-                          <Check className="w-3.5 h-3.5 text-emerald-400" />
+                          <Check className="w-3.5 h-3.5 text-lime-600" />
                         ) : (
                           <Copy className="w-3.5 h-3.5" />
                         )}
@@ -336,21 +334,21 @@ export default function UserManager() {
 
                     {/* Phone */}
                     {user.phone && (
-                      <div className="flex items-center justify-between p-2 rounded-xl bg-slate-900/60 border border-slate-800/60">
+                      <div className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
                         <div className="flex items-center gap-2 min-w-0">
                           <Phone className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                          <span className="text-slate-200 font-mono text-[11px] truncate">
+                          <span className="text-slate-700 font-mono text-[11px] truncate">
                             {user.phone}
                           </span>
                         </div>
                         <button
                           type="button"
                           onClick={() => handleCopy(user.phone, `phone-${user.id}`)}
-                          className="p-1 text-slate-400 hover:text-white transition-colors"
+                          className="p-1 text-slate-400 hover:text-slate-700 transition-colors"
                           title="Copy phone"
                         >
                           {copiedField === `phone-${user.id}` ? (
-                            <Check className="w-3.5 h-3.5 text-emerald-400" />
+                            <Check className="w-3.5 h-3.5 text-lime-600" />
                           ) : (
                             <Copy className="w-3.5 h-3.5" />
                           )}
@@ -361,9 +359,9 @@ export default function UserManager() {
                 </div>
 
                 {/* Card Footer: Timestamp */}
-                <div className="pt-2 border-t border-slate-800/70 flex items-center justify-between text-[10px] text-slate-400">
+                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-400">
                   <div className="flex items-center gap-1.5">
-                    <Calendar className="w-3 h-3 text-slate-500" />
+                    <Calendar className="w-3 h-3 text-slate-400" />
                     <span>
                       {user.created_at
                         ? new Date(user.created_at).toLocaleDateString(undefined, {
@@ -374,7 +372,7 @@ export default function UserManager() {
                         : 'Registered'}
                     </span>
                   </div>
-                  <span className="text-[10px] font-mono text-slate-500">
+                  <span className="text-[10px] font-mono text-slate-400">
                     ID #{user.id}
                   </span>
                 </div>
@@ -386,17 +384,17 @@ export default function UserManager() {
 
       {/* Pagination Controls */}
       {meta.total_pages > 1 && (
-        <div className="flex items-center justify-between pt-4 border-t border-slate-800/80">
-          <p className="text-xs text-slate-400">
-            Page <span className="text-white font-semibold">{meta.current_page}</span> of{' '}
-            <span className="text-white font-semibold">{meta.total_pages}</span> ({meta.total_count} total users)
+        <div className="flex items-center justify-between pt-4 border-t border-slate-200">
+          <p className="text-xs text-slate-500">
+            Page <span className="text-slate-900 font-semibold">{meta.current_page}</span> of{' '}
+            <span className="text-slate-900 font-semibold">{meta.total_pages}</span> ({meta.total_count} total users)
           </p>
           <div className="flex items-center gap-2">
             <button
               type="button"
               disabled={meta.current_page <= 1 || isLoading}
               onClick={() => fetchUsers(meta.current_page - 1)}
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 disabled:opacity-40 disabled:pointer-events-none transition-colors"
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none transition-colors shadow-sm"
             >
               <ChevronLeft className="w-4 h-4" />
               <span>Previous</span>
@@ -405,7 +403,7 @@ export default function UserManager() {
               type="button"
               disabled={meta.current_page >= meta.total_pages || isLoading}
               onClick={() => fetchUsers(meta.current_page + 1)}
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 disabled:opacity-40 disabled:pointer-events-none transition-colors"
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none transition-colors shadow-sm"
             >
               <span>Next</span>
               <ChevronRight className="w-4 h-4" />

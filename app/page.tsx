@@ -23,14 +23,14 @@ export default function Home() {
   // Loading state while restoring JWT session
   if (isLoading) {
     return (
-      <div className="min-h-screen w-full flex flex-col items-center justify-center bg-[#070b14] relative overflow-hidden">
+      <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-sky-50 via-white to-lime-50/40 relative overflow-hidden">
         {/* Ambient background glow */}
-        <div className="absolute w-80 h-80 bg-indigo-600/15 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute w-64 h-64 bg-amber-500/10 rounded-full blur-[100px] pointer-events-none -bottom-10" />
+        <div className="absolute w-80 h-80 bg-sky-400/20 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute w-64 h-64 bg-lime-400/20 rounded-full blur-[100px] pointer-events-none -bottom-10" />
 
         <div className="relative z-10 flex flex-col items-center animate-in fade-in duration-300">
-          <div className="relative w-24 h-24 rounded-3xl bg-gradient-to-tr from-indigo-500 via-sky-500 to-emerald-400 p-0.5 shadow-2xl shadow-indigo-950/70 animate-pulse">
-            <div className="w-full h-full bg-[#0d1322] rounded-[22px] p-2 flex items-center justify-center overflow-hidden">
+          <div className="relative w-24 h-24 rounded-3xl bg-gradient-to-tr from-sky-500 via-sky-400 to-lime-400 p-0.5 shadow-2xl shadow-sky-500/20 animate-pulse">
+            <div className="w-full h-full bg-white rounded-[22px] p-2 flex items-center justify-center overflow-hidden">
               <Image
                 src="/logo.png"
                 alt="Bethesda Deliverance Church Emblem"
@@ -41,13 +41,13 @@ export default function Home() {
               />
             </div>
             {/* Spinning decorative orbit */}
-            <div className="absolute -inset-1.5 rounded-3xl border-2 border-indigo-500/30 border-t-emerald-400/80 animate-spin" />
+            <div className="absolute -inset-1.5 rounded-3xl border-2 border-sky-300/40 border-t-lime-500 animate-spin" />
           </div>
 
-          <h2 className="text-white font-bold text-base sm:text-lg mt-5 tracking-tight">
+          <h2 className="text-slate-900 font-bold text-base sm:text-lg mt-5 tracking-tight">
             பரமனின் கீதங்கள்
           </h2>
-          <p className="text-xs text-indigo-200/70 mt-1 font-medium tracking-wide">
+          <p className="text-xs text-sky-700 mt-1 font-medium tracking-wide">
             Connecting to Bethesda Church Portal...
           </p>
         </div>
@@ -69,7 +69,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#070b14] text-slate-100 selection:bg-indigo-500/30 selection:text-indigo-200">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-sky-50/70 via-slate-50 to-lime-50/20 text-slate-900 selection:bg-sky-500/20 selection:text-sky-900">
       {/* Top Navbar */}
       <Navbar
         onOpenSettings={() => setIsSettingsOpen(true)}
