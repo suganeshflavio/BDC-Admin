@@ -11,6 +11,9 @@ import {
   RegisterUserInput,
   RegisterUserResponse,
   UsersResponse,
+  Announcement,
+  AnnouncementInput,
+  AnnouncementsResponse,
 } from './types';
 
 const DEFAULT_API_BASE_URL =
@@ -314,4 +317,55 @@ export const api = {
         body: JSON.stringify({ about_us }),
       }),
   },
+  adminAnnouncements: {
+    list: (page = 1) => request<AnnouncementsResponse>(`/announcements?page=${page}`),
+    get: (id: number) =>
+      request<{ announcement?: Announcement } | Announcement>(`/announcements/${id}`).then((res) =>
+        'announcement' in res && res.announcement ? res.announcement : (res as Announcement)
+      ),
+    create: (announcement: AnnouncementInput) =>
+      request<{ announcement?: Announcement } | Announcement>('/admin/announcements', {
+        method: 'POST',
+        body: JSON.stringify({ announcement }),
+      }).then((res) =>
+        'announcement' in res && res.announcement ? res.announcement : (res as Announcement)
+      ),
+    update: (id: number, announcement: AnnouncementInput) =>
+      request<{ announcement?: Announcement } | Announcement>(`/admin/announcements/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify({ announcement }),
+      }).then((res) =>
+        'announcement' in res && res.announcement ? res.announcement : (res as Announcement)
+      ),
+    delete: (id: number) =>
+      request<void>(`/admin/announcements/${id}`, {
+        method: 'DELETE',
+      }),
+  },
 };
+
+export function parseBannerImage(imgTagOrUrl: string): { url: string; alt: string } {
+  if (!imgTagOrUrl) return { url: '', alt: '' };
+  const trimmed = imgTagOrUrl.trim();
+  const srcMatch = trimmed.match(/src=["']([^"']+)["']/i);
+  const altMatch = trimmed.match(/alt=["']([^"']*)["']/i);
+  if (srcMatch) {
+    return {
+      url: srcMatch[1],
+      alt: altMatch ? altMatch[1] : '',
+    };
+  }
+  return {
+    url: trimmed.replace(/<[^>]+>/g, '').trim(),
+    alt: '',
+  };
+}
+
+export function formatBannerImageTag(url: string, alt = ''): string {
+  const cleanUrl = url.trim();
+  const cleanAlt = alt.trim();
+  if (cleanUrl.startsWith('<img') && cleanUrl.endsWith('/>')) {
+    return cleanUrl;
+  }
+  return `<img src="${cleanUrl}" alt="${cleanAlt || 'Banner'}" />`;
+}

@@ -10,6 +10,7 @@ import BottomNav from '@/components/layout/BottomNav';
 import DashboardOverview from '@/components/dashboard/DashboardOverview';
 import SongManager from '@/components/songs/SongManager';
 import NotificationManager from '@/components/notifications/NotificationManager';
+import BannerManager from '@/components/banners/BannerManager';
 import UserManager from '@/components/users/UserManager';
 import AboutUsManager from '@/components/about/AboutUsManager';
 import ApiConfigModal from '@/components/settings/ApiConfigModal';
@@ -19,6 +20,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [openCreateSong, setOpenCreateSong] = useState(false);
+  const [openCreateBanner, setOpenCreateBanner] = useState(false);
 
   // Loading state while restoring JWT session
   if (isLoading) {
@@ -109,6 +111,13 @@ export default function Home() {
           )}
 
           {activeTab === 'notifications' && <NotificationManager />}
+
+          {activeTab === 'banners' && (
+            <BannerManager
+              initialOpenCreate={openCreateBanner}
+              onOpenCreateHandled={() => setOpenCreateBanner(false)}
+            />
+          )}
 
           {activeTab === 'users' && <UserManager />}
 

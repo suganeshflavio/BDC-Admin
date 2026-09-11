@@ -7,15 +7,18 @@ import {
   Bell,
   Building2,
   ChevronRight,
+  Image as ImageIcon,
+  Users,
 } from 'lucide-react';
 
-export type NavTab = 'dashboard' | 'songs' | 'notifications' | 'about' | 'users';
+export type NavTab = 'dashboard' | 'songs' | 'notifications' | 'banners' | 'users' | 'about';
 
 interface SidebarProps {
   activeTab: NavTab;
   onSelectTab: (tab: NavTab) => void;
   songsCount?: number;
   notificationsCount?: number;
+  bannersCount?: number;
   usersCount?: number;
 }
 
@@ -24,6 +27,8 @@ export default function Sidebar({
   onSelectTab,
   songsCount = 0,
   notificationsCount = 0,
+  bannersCount = 0,
+  usersCount = 0,
 }: SidebarProps) {
   const navItems = [
     {
@@ -45,6 +50,20 @@ export default function Sidebar({
       icon: Bell,
       badge: notificationsCount > 0 ? notificationsCount : undefined,
       description: 'Worship links & alerts',
+    },
+    {
+      id: 'banners' as NavTab,
+      label: 'Banner Image',
+      icon: ImageIcon,
+      badge: bannersCount > 0 ? bannersCount : undefined,
+      description: 'Announcements & banners',
+    },
+    {
+      id: 'users' as NavTab,
+      label: 'Admin Users',
+      icon: Users,
+      badge: usersCount > 0 ? usersCount : undefined,
+      description: 'Account access & roles',
     },
     {
       id: 'about' as NavTab,

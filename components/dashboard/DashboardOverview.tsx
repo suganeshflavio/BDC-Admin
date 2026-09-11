@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/auth-context';
-import { Song, NotificationItem } from '@/lib/types';
+import { Song, NotificationItem, Announcement } from '@/lib/types';
 import { api } from '@/lib/api';
 import {
   Music,
@@ -11,8 +11,8 @@ import {
   ArrowRight,
   Sparkles,
   Calendar,
-  CheckCircle2,
   ExternalLink,
+  Image as ImageIcon,
 } from 'lucide-react';
 import { YoutubeIcon } from '@/components/ui/icons';
 import { NavTab } from '../layout/Sidebar';
@@ -30,19 +30,22 @@ export default function DashboardOverview({
   const { user } = useAuth();
   const [songs, setSongs] = useState<Song[]>([]);
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadDashboardData() {
       setIsLoading(true);
       try {
-        const [songsRes, notifsRes] = await Promise.all([
+        const [songsRes, notifsRes, bannersRes] = await Promise.all([
           api.adminSongs.list(1).catch(() => ({ songs: [], meta: { current_page: 1, total_pages: 1, total_count: 0 } })),
           api.adminNotifications.list(1).catch(() => ({ notifications: [], meta: { current_page: 1, total_pages: 1, total_count: 0 } })),
+          api.adminAnnouncements.list(1).catch(() => ({ announcements: [], meta: { current_page: 1, total_pages: 1, total_count: 0 } })),
         ]);
 
         setSongs(songsRes.songs || []);
         setNotifications(notifsRes.notifications || []);
+        setAnnouncements(bannersRes.announcements || []);
       } finally {
         setIsLoading(false);
       }
@@ -51,9 +54,8 @@ export default function DashboardOverview({
   }, []);
 
   const totalSongs = songs.length;
-  const publishedSongs = songs.filter((s) => s.published).length;
-  const draftSongs = totalSongs - publishedSongs;
   const totalNotifs = notifications.length;
+  const totalBanners = announcements.length;
 
   return (
     <div className="space-y-6 pb-20 md:pb-8 animate-in fade-in duration-300">
@@ -84,10 +86,17 @@ export default function DashboardOverview({
               <span>Add New Song</span>
             </button>
             <button
+              onClick={() => onNavigate('banners')}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white border border-white/30 font-semibold text-xs sm:text-sm transition-all"
+            >
+              <ImageIcon className="w-4 h-4 text-lime-300" />
+              <span>Banner Image</span>
+            </button>
+            <button
               onClick={() => onNavigate('notifications')}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white border border-white/30 font-semibold text-xs sm:text-sm transition-all"
             >
-              <Bell className="w-4 h-4 text-lime-300" />
+              <Bell className="w-4 h-4 text-sky-200" />
               <span>Broadcast Alert</span>
             </button>
           </div>
@@ -111,28 +120,26 @@ export default function DashboardOverview({
             {isLoading ? '...' : totalSongs}
           </div>
           <div className="text-xs font-semibold text-slate-700 mt-1">Total Song Library</div>
-          {/* <div className="text-[11px] text-slate-500 mt-0.5">
-            {publishedSongs} published · {draftSongs} drafts
-          </div> */}
+          <div className="text-[11px] text-slate-500 mt-0.5">Lyrics, chords & verses</div>
         </div>
 
-        {/* Published Ratio */}
-        {/* <div
-          onClick={() => onNavigate('songs')}
-          className="glass-panel p-4 sm:p-5 rounded-2xl hover:border-lime-300 hover:shadow-md transition-all cursor-pointer group"
+        {/* Banner Images */}
+        <div
+          onClick={() => onNavigate('banners')}
+          className="glass-panel p-4 sm:p-5 rounded-2xl hover:border-sky-400 hover:shadow-md transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between mb-3">
-            <div className="p-2.5 rounded-xl bg-lime-100 text-lime-700 group-hover:bg-lime-600 group-hover:text-white transition-colors">
-              <CheckCircle2 className="w-5 h-5" />
+            <div className="p-2.5 rounded-xl bg-sky-100 text-sky-700 group-hover:bg-gradient-to-tr group-hover:from-sky-500 group-hover:to-blue-600 group-hover:text-white transition-colors">
+              <ImageIcon className="w-5 h-5" />
             </div>
-            <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-lime-600 group-hover:translate-x-0.5 transition-all" />
+            <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-sky-600 group-hover:translate-x-0.5 transition-all" />
           </div>
           <div className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-            {isLoading ? '...' : publishedSongs}
+            {isLoading ? '...' : totalBanners}
           </div>
-          <div className="text-xs font-semibold text-slate-700 mt-1">Live in Mobile App</div>
-          <div className="text-[11px] text-lime-700 font-medium mt-0.5">Active & Searchable</div>
-        </div> */}
+          <div className="text-xs font-semibold text-slate-700 mt-1">Banner Announcements</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Mobile app carousels & promos</div>
+        </div>
 
         {/* Notifications */}
         <div

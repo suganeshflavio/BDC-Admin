@@ -128,3 +128,22 @@ export interface AboutUsInput {
 export interface ApiError {
   error: string;
 }
+
+export interface Announcement {
+  id: number;
+  subject?: string | null;
+  description?: string | null;
+  banner_images: string[];
+  created_at?: string;
+}
+
+export interface AnnouncementInput {
+  subject?: string | null;
+  description?: string | null;
+  banner_images: string[];
+}
+
+export interface AnnouncementsResponse {
+  announcements: Announcement[];
+  meta: PaginationMeta;
+}
