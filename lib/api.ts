@@ -14,7 +14,7 @@ import {
   UsersResponse,
 } from './types';
 
-const DEFAULT_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://192.168.1.39:3099/api/v1';
+const DEFAULT_API_BASE_URL = process.env.NEXT_API_BASE_URL || 'http://192.168.1.39:3099/api/v1';
 
 export function getApiBaseUrl(): string {
   if (typeof window !== 'undefined') {
