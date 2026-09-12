@@ -74,7 +74,7 @@ export default function SongEditorModal({
         setVerses([
           {
             tempKey: `verse_init_0_${Date.now()}`,
-            verse_type: 'verse',
+            verse_type: 'stanza',
             verse_number: 1,
             position: 0,
             content: '',
@@ -94,10 +94,10 @@ export default function SongEditorModal({
 
   if (!isOpen) return null;
 
-  const handleAddVerse = (type: VerseType = 'verse') => {
+  const handleAddVerse = (type: VerseType = 'stanza') => {
     let nextNum: number | null = null;
-    if (type === 'verse') {
-      const verseCounts = verses.filter((v) => v.verse_type === 'verse').length;
+    if (type === 'stanza') {
+      const verseCounts = verses.filter((v) => v.verse_type === 'stanza').length;
       nextNum = verseCounts + 1;
     }
     const newVerse: VerseState = {
@@ -156,7 +156,7 @@ export default function SongEditorModal({
         song_verses_attributes: verses.map((v, idx) => ({
           ...(v.id ? { id: v.id } : {}),
           verse_type: v.verse_type,
-          verse_number: v.verse_type === 'verse' ? v.verse_number ?? idx + 1 : null,
+          verse_number: v.verse_type === 'stanza' ? v.verse_number ?? idx + 1 : null,
           position: idx,
           content: v.content.trim(),
         })),
@@ -272,8 +272,8 @@ export default function SongEditorModal({
                       }`}
                     >
                       <div className="text-[10px] uppercase font-bold tracking-wider text-sky-700 mb-1.5">
-                        {v.verse_type === 'verse'
-                          ? `Verse ${v.verse_number || idx + 1}`
+                        {v.verse_type === 'stanza'
+                          ? `Stanza ${v.verse_number || idx + 1}`
                           : v.verse_type.toUpperCase()}
                       </div>
                       <p className="text-sm text-slate-800 whitespace-pre-line leading-relaxed tamil-text font-medium">
@@ -337,7 +337,7 @@ export default function SongEditorModal({
                   <div className="flex items-center gap-2">
                     <Layers className="w-4 h-4 text-sky-600" />
                     <h3 className="text-sm font-semibold text-slate-900">
-                      Verses & Chorus Structure ({verses.length})
+                      Stanza & Chorus Structure ({verses.length})
                     </h3>
                   </div>
 
@@ -353,10 +353,10 @@ export default function SongEditorModal({
                     </button>
                     <button
                       type="button"
-                      onClick={() => handleAddVerse('verse')}
+                      onClick={() => handleAddVerse('stanza')}
                       className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-lime-50 hover:bg-lime-100 text-lime-800 border border-lime-200 transition-colors"
                     >
-                      + Verse
+                      + Stanza
                     </button>
                   </div>
                 </div>
@@ -364,9 +364,9 @@ export default function SongEditorModal({
                 {verses.length === 0 ? (
                   <div className="p-8 text-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/50">
                     <AlertCircle className="w-8 h-8 text-slate-400 mx-auto mb-2" />
-                    <p className="text-xs text-slate-600 font-medium">No verses added yet.</p>
+                    <p className="text-xs text-slate-600 font-medium">No stanza added yet.</p>
                     <p className="text-[11px] text-slate-400 mt-1">
-                      Click &quot;+ Chorus&quot; or &quot;+ Verse&quot; above to add lyrics.
+                      Click &quot;+ Chorus&quot; or &quot;+ Stanza&quot; above to add lyrics.
                     </p>
                   </div>
                 ) : (
@@ -392,13 +392,13 @@ export default function SongEditorModal({
                               className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white border border-slate-200 text-slate-800 focus:outline-none focus:border-sky-500 shadow-xs"
                             >
                               <option value="chorus">Chorus</option>
-                              <option value="verse">Verse</option>
-                              <option value="intro">Intro</option>
+                              <option value="stanza">Stanza</option>
+                              {/* <option value="intro">Intro</option>
                               <option value="bridge">Bridge</option>
-                              <option value="outro">Outro</option>
+                              <option value="outro">Outro</option> */}
                             </select>
 
-                            {verse.verse_type === 'verse' && (
+                            {verse.verse_type === 'stanza' && (
                               <div className="flex items-center gap-1">
                                 <span className="text-xs text-slate-500">#</span>
                                 <input
@@ -471,7 +471,7 @@ export default function SongEditorModal({
         {/* Footer Actions */}
         <div className="flex items-center justify-between px-5 py-4 border-t border-slate-100 bg-slate-50/60 rounded-b-2xl">
           <span className="text-xs text-slate-500">
-            {isEditing ? `Song ID: ${song.id}` : 'Drafting new hymn'}
+            {/* {isEditing ? `Song ID: ${song.id}` : 'Drafting new hymn'} */}
           </span>
 
           <div className="flex items-center gap-2">

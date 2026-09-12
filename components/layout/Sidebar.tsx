@@ -51,13 +51,13 @@ export default function Sidebar({
       badge: notificationsCount > 0 ? notificationsCount : undefined,
       description: 'Worship links & alerts',
     },
-    {
-      id: 'banners' as NavTab,
-      label: 'Banner Image',
-      icon: ImageIcon,
-      badge: bannersCount > 0 ? bannersCount : undefined,
-      description: 'Announcements & banners',
-    },
+    // {
+    //   id: 'banners' as NavTab,
+    //   label: 'Banner Image',
+    //   icon: ImageIcon,
+    //   badge: bannersCount > 0 ? bannersCount : undefined,
+    //   description: 'Announcements & banners',
+    // },
     {
       id: 'users' as NavTab,
       label: 'Admin Users',

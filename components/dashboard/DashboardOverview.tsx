@@ -85,13 +85,13 @@ export default function DashboardOverview({
               <Plus className="w-4 h-4" />
               <span>Add New Song</span>
             </button>
-            <button
+            {/* <button
               onClick={() => onNavigate('banners')}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white border border-white/30 font-semibold text-xs sm:text-sm transition-all"
             >
               <ImageIcon className="w-4 h-4 text-lime-300" />
               <span>Banner Image</span>
-            </button>
+            </button> */}
             <button
               onClick={() => onNavigate('notifications')}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white border border-white/30 font-semibold text-xs sm:text-sm transition-all"
@@ -124,7 +124,7 @@ export default function DashboardOverview({
         </div>
 
         {/* Banner Images */}
-        <div
+        {/* <div
           onClick={() => onNavigate('banners')}
           className="glass-panel p-4 sm:p-5 rounded-2xl hover:border-sky-400 hover:shadow-md transition-all cursor-pointer group"
         >
@@ -139,7 +139,7 @@ export default function DashboardOverview({
           </div>
           <div className="text-xs font-semibold text-slate-700 mt-1">Banner Announcements</div>
           <div className="text-[11px] text-slate-500 mt-0.5">Mobile app carousels & promos</div>
-        </div>
+        </div> */}
 
         {/* Notifications */}
         <div

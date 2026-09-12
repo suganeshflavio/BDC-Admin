@@ -455,7 +455,7 @@ export default function SongManager({
                     }`}
                   >
                     <div className="text-[10px] uppercase font-bold tracking-wider text-sky-700 mb-1">
-                      {v.verse_type === 'verse'
+                      {v.verse_type === 'stanza'
                         ? `Verse ${v.verse_number || i + 1}`
                         : v.verse_type.toUpperCase()}
                     </div>

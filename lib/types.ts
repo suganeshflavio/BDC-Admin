@@ -36,7 +36,7 @@ export interface RegisterUserResponse {
   user: User;
 }
 
-export type VerseType = 'intro' | 'chorus' | 'verse' | 'bridge' | 'outro';
+export type VerseType =  'chorus' | 'stanza' | 'intro' | 'bridge' | 'outro';
 
 export interface SongVerse {
   id?: number;
