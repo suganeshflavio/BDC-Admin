@@ -38,12 +38,12 @@ export default function BottomNav({
       icon: Bell,
       badge: notificationsCount > 0 ? notificationsCount : undefined,
     },
-    {
-      id: 'banners' as NavTab,
-      label: 'Banners',
-      icon: ImageIcon,
-      badge: bannersCount > 0 ? bannersCount : undefined,
-    },
+    // {
+    //   id: 'banners' as NavTab,
+    //   label: 'Banners',
+    //   icon: ImageIcon,
+    //   badge: bannersCount > 0 ? bannersCount : undefined,
+    // },
     {
       id: 'about' as NavTab,
       label: 'Church',
