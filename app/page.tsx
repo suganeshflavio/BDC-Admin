@@ -13,6 +13,8 @@ import NotificationManager from '@/components/notifications/NotificationManager'
 import BannerManager from '@/components/banners/BannerManager';
 import UserManager from '@/components/users/UserManager';
 import AboutUsManager from '@/components/about/AboutUsManager';
+import PrayerRequestManager from '@/components/prayer/PrayerRequestManager';
+import FeedbackManager from '@/components/feedback/FeedbackManager';
 import ApiConfigModal from '@/components/settings/ApiConfigModal';
 
 export default function Home() {
@@ -111,6 +113,10 @@ export default function Home() {
           )}
 
           {activeTab === 'notifications' && <NotificationManager />}
+
+          {activeTab === 'prayer_requests' && <PrayerRequestManager />}
+
+          {activeTab === 'feedback' && <FeedbackManager />}
 
           {activeTab === 'banners' && (
             <BannerManager

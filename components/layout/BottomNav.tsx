@@ -1,7 +1,14 @@
 'use client';
 
 import React from 'react';
-import { LayoutDashboard, Music, Bell, Building2, Image as ImageIcon } from 'lucide-react';
+import {
+  LayoutDashboard,
+  Music,
+  Bell,
+  Building2,
+  HandHeart,
+  MessageSquareQuote,
+} from 'lucide-react';
 import { NavTab } from './Sidebar';
 
 interface BottomNavProps {
@@ -9,6 +16,8 @@ interface BottomNavProps {
   onSelectTab: (tab: NavTab) => void;
   songsCount?: number;
   notificationsCount?: number;
+  prayerRequestsCount?: number;
+  feedbackCount?: number;
   bannersCount?: number;
   usersCount?: number;
 }
@@ -18,7 +27,8 @@ export default function BottomNav({
   onSelectTab,
   songsCount = 0,
   notificationsCount = 0,
-  bannersCount = 0,
+  prayerRequestsCount = 0,
+  feedbackCount = 0,
 }: BottomNavProps) {
   const tabs = [
     {
@@ -31,6 +41,18 @@ export default function BottomNav({
       label: 'Songs',
       icon: Music,
       badge: songsCount > 0 ? songsCount : undefined,
+    },
+    {
+      id: 'prayer_requests' as NavTab,
+      label: 'Prayers',
+      icon: HandHeart,
+      badge: prayerRequestsCount > 0 ? prayerRequestsCount : undefined,
+    },
+    {
+      id: 'feedback' as NavTab,
+      label: 'Feedback',
+      icon: MessageSquareQuote,
+      badge: feedbackCount > 0 ? feedbackCount : undefined,
     },
     {
       id: 'notifications' as NavTab,

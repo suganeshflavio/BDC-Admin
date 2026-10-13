@@ -9,15 +9,27 @@ import {
   ChevronRight,
   Image as ImageIcon,
   Users,
+  HandHeart,
+  MessageSquareQuote,
 } from 'lucide-react';
 
-export type NavTab = 'dashboard' | 'songs' | 'notifications' | 'banners' | 'users' | 'about';
+export type NavTab =
+  | 'dashboard'
+  | 'songs'
+  | 'notifications'
+  | 'prayer_requests'
+  | 'feedback'
+  | 'banners'
+  | 'users'
+  | 'about';
 
 interface SidebarProps {
   activeTab: NavTab;
   onSelectTab: (tab: NavTab) => void;
   songsCount?: number;
   notificationsCount?: number;
+  prayerRequestsCount?: number;
+  feedbackCount?: number;
   bannersCount?: number;
   usersCount?: number;
 }
@@ -27,6 +39,8 @@ export default function Sidebar({
   onSelectTab,
   songsCount = 0,
   notificationsCount = 0,
+  prayerRequestsCount = 0,
+  feedbackCount = 0,
   bannersCount = 0,
   usersCount = 0,
 }: SidebarProps) {
@@ -43,6 +57,20 @@ export default function Sidebar({
       icon: Music,
       badge: songsCount > 0 ? songsCount : undefined,
       description: 'Lyrics, verses & details',
+    },
+    {
+      id: 'prayer_requests' as NavTab,
+      label: 'Prayer Requests',
+      icon: HandHeart,
+      badge: prayerRequestsCount > 0 ? prayerRequestsCount : undefined,
+      description: 'Intercessions & voice notes',
+    },
+    {
+      id: 'feedback' as NavTab,
+      label: 'Feedback',
+      icon: MessageSquareQuote,
+      badge: feedbackCount > 0 ? feedbackCount : undefined,
+      description: 'Questions & responses',
     },
     {
       id: 'notifications' as NavTab,

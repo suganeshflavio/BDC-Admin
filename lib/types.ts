@@ -147,3 +147,80 @@ export interface AnnouncementsResponse {
   announcements: Announcement[];
   meta: PaginationMeta;
 }
+
+export interface FeedbackQuestion {
+  id: number;
+  question_text: string;
+  description?: string | null;
+  position?: number;
+  active?: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface FeedbackQuestionInput {
+  question_text: string;
+  description?: string | null;
+  position?: number;
+  active?: boolean;
+}
+
+export interface FeedbackQuestionsResponse {
+  feedback_questions: FeedbackQuestion[];
+  meta?: PaginationMeta;
+}
+
+export interface FeedbackAnswerUser {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string | null;
+  role?: string;
+}
+
+export interface FeedbackAnswer {
+  id: number;
+  feedback_question_id: number;
+  answer_text: string;
+  device_id: string;
+  updated_at?: string;
+  created_at?: string;
+  question_text?: string;
+  user?: FeedbackAnswerUser | null;
+}
+
+export interface FeedbackAnswersResponse {
+  feedback_answers: FeedbackAnswer[];
+  meta: PaginationMeta;
+}
+
+export interface PrayerRequestUser {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string | null;
+  role?: string;
+}
+
+export interface PrayerRequest {
+  id: number;
+  name?: string | null;
+  mobile?: string | null;
+  description: string;
+  voice_note_url?: string | null;
+  status: 'pending' | 'prayed_for' | string;
+  device_id?: string;
+  created_at?: string;
+  user_id?: number | null;
+  user?: PrayerRequestUser | null;
+}
+
+export interface PrayerRequestsResponse {
+  prayer_requests: PrayerRequest[];
+  meta?: PaginationMeta;
+}
+
+export interface PrayerRequestUpdateInput {
+  status: 'pending' | 'prayed_for' | string;
+}
+
