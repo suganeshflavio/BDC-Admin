@@ -8,10 +8,7 @@ import {
   X,
   Image as ImageIcon,
   Check,
-  Plus,
   Trash2,
-  ChevronUp,
-  ChevronDown,
   AlertCircle,
   Sparkles,
   HelpCircle,
@@ -126,63 +123,91 @@ export default function BannerEditorModal({
       if (announcement) {
         setSubject(announcement.subject || '');
         setDescription(announcement.description || '');
-        const parsedImages: BannerImageItem[] = (announcement.banner_images || []).map(
-          (rawTagOrUrl, index) => {
-            const parsed = parseBannerImage(rawTagOrUrl);
-            return {
-              id: `${Date.now()}-${index}`,
+        const rawList = announcement.banner_images || [];
+        if (rawList.length > 0) {
+          const parsed = parseBannerImage(rawList[0]);
+          const isData = parsed.url.startsWith('data:');
+          setImages([
+            {
+              id: `${Date.now()}-0`,
               url: parsed.url,
-              alt: parsed.alt || `Banner ${index + 1}`,
-              isUploaded: parsed.url.startsWith('data:'),
-            };
+              alt: parsed.alt || 'Banner image',
+              isUploaded: isData,
+            },
+          ]);
+          if (!isData) {
+            setImageUrlInput(parsed.url);
+            setImageAltInput(parsed.alt || '');
+          } else {
+            setImageUrlInput('');
+            setImageAltInput(parsed.alt || '');
           }
-        );
-        setImages(parsedImages);
+        } else {
+          setImages([]);
+          setImageUrlInput('');
+          setImageAltInput('');
+        }
       } else {
         setSubject('');
         setDescription('');
         setImages([]);
+        setImageUrlInput('');
+        setImageAltInput('');
       }
       setInputMode('upload');
-      setImageUrlInput('');
-      setImageAltInput('');
       setPreviewError(false);
       setErrorMsg(null);
     }
   }, [isOpen, announcement]);
 
-  // Handle files selected or dropped
-  const processSelectedFiles = useCallback(async (fileList: FileList | File[]) => {
-    const files = Array.from(fileList).filter((f) => f.type.startsWith('image/'));
-    if (files.length === 0) {
-      setErrorMsg('Please select valid image files (PNG, JPG, WebP, GIF).');
-      return;
-    }
-
-    setIsProcessingFiles(true);
-    setErrorMsg(null);
-
-    try {
-      const processed = await Promise.all(files.map((file) => optimizeImageFile(file)));
-      const newItems: BannerImageItem[] = processed.map((item, idx) => ({
-        id: `${Date.now()}-${Math.random().toString(36).substring(2, 7)}-${idx}`,
-        url: item.dataUrl,
-        alt: item.name || `Banner image ${images.length + idx + 1}`,
-        isUploaded: true,
-      }));
-
-      setImages((prev) => [...prev, ...newItems]);
-      successToast(`Added ${newItems.length} image${newItems.length > 1 ? 's' : ''}`);
-    } catch {
-      setErrorMsg('Failed to process one or more images.');
-      errorToast('Failed to load selected images.');
-    } finally {
-      setIsProcessingFiles(false);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
+  // Handle file selected or dropped - Validate 1 image at a time
+  const processSelectedFiles = useCallback(
+    async (fileList: FileList | File[]) => {
+      const files = Array.from(fileList).filter((f) => f.type.startsWith('image/'));
+      if (files.length === 0) {
+        setErrorMsg('Please select a valid image file (PNG, JPG, WebP, GIF).');
+        return;
       }
-    }
-  }, [images.length, successToast, errorToast]);
+
+      // Validate: only 1 image at a time
+      if (files.length > 1) {
+        setErrorMsg('Please upload only 1 image at a time.');
+        errorToast('Please upload only 1 image at a time.');
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+        return;
+      }
+
+      setIsProcessingFiles(true);
+      setErrorMsg(null);
+
+      try {
+        const item = await optimizeImageFile(files[0]);
+        const newItem: BannerImageItem = {
+          id: `${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+          url: item.dataUrl,
+          alt: item.name || 'Banner image',
+          isUploaded: true,
+        };
+
+        // Enforce 1 image at a time
+        setImages([newItem]);
+        setImageUrlInput('');
+        setImageAltInput('');
+        successToast('Banner image uploaded successfully.');
+      } catch {
+        setErrorMsg('Failed to process image.');
+        errorToast('Failed to load selected image.');
+      } finally {
+        setIsProcessingFiles(false);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+      }
+    },
+    [successToast, errorToast]
+  );
 
   // Drag & Drop event handlers
   const handleDragOver = (e: React.DragEvent) => {
@@ -202,121 +227,119 @@ export default function BannerEditorModal({
     e.stopPropagation();
     setIsDragging(false);
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      if (e.dataTransfer.files.length > 1) {
+        setErrorMsg('Please upload only 1 image at a time.');
+        errorToast('Please upload only 1 image at a time.');
+        return;
+      }
       processSelectedFiles(e.dataTransfer.files);
     }
   };
 
-  // Clipboard paste support for images
+  // Clipboard paste support for images - Validates 1 image at a time
   const handleModalPaste = (e: React.ClipboardEvent) => {
     if (e.clipboardData && e.clipboardData.files && e.clipboardData.files.length > 0) {
-      const imageFiles = Array.from(e.clipboardData.files).filter((f) => f.type.startsWith('image/'));
+      const imageFiles = Array.from(e.clipboardData.files).filter((f) =>
+        f.type.startsWith('image/')
+      );
       if (imageFiles.length > 0) {
         e.preventDefault();
+        if (imageFiles.length > 1) {
+          setErrorMsg('Please upload only 1 image at a time.');
+          errorToast('Please upload only 1 image at a time.');
+          return;
+        }
         processSelectedFiles(imageFiles);
       }
     }
   };
 
-  // Handle URL input changes - auto detect if user pasted a full <img src="..." alt="..." /> tag
+  // Handle URL input changes - Auto set image directly without requiring an "Add+" button
   const handleUrlInputChange = (value: string) => {
     setPreviewError(false);
     setErrorMsg(null);
+
+    let finalUrl = value;
+    let finalAlt = imageAltInput;
+
     if (value.includes('<img')) {
       const parsed = parseBannerImage(value);
-      setImageUrlInput(parsed.url);
+      finalUrl = parsed.url;
       if (parsed.alt && !imageAltInput) {
+        finalAlt = parsed.alt;
         setImageAltInput(parsed.alt);
       }
-    } else {
-      setImageUrlInput(value);
+    }
+
+    setImageUrlInput(finalUrl);
+
+    const trimmed = finalUrl.trim();
+    if (
+      trimmed.startsWith('http://') ||
+      trimmed.startsWith('https://') ||
+      trimmed.startsWith('data:image/')
+    ) {
+      setImages([
+        {
+          id: 'url-image',
+          url: trimmed,
+          alt: finalAlt.trim() || 'Banner image',
+          isUploaded: false,
+        },
+      ]);
+    } else if (!trimmed) {
+      setImages((prev) => prev.filter((img) => img.isUploaded));
     }
   };
 
-  const handleAddUrlImage = () => {
-    const trimmedUrl = imageUrlInput.trim();
-    if (!trimmedUrl) {
-      setErrorMsg('Please enter an image URL.');
-      return;
-    }
+  const handleAltChange = (newAlt: string) => {
+    setImageAltInput(newAlt);
+    setImages((prev) =>
+      prev.map((img) => ({
+        ...img,
+        alt: newAlt,
+      }))
+    );
+  };
 
-    if (!trimmedUrl.startsWith('http://') && !trimmedUrl.startsWith('https://') && !trimmedUrl.startsWith('data:image/')) {
-      setErrorMsg('Image URL must start with http://, https://, or be a valid data URI');
-      return;
-    }
-
-    const newImage: BannerImageItem = {
-      id: `${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-      url: trimmedUrl,
-      alt: imageAltInput.trim() || `Banner ${images.length + 1}`,
-      isUploaded: false,
-    };
-
-    setImages((prev) => [...prev, newImage]);
+  const handleRemoveImage = () => {
+    setImages([]);
     setImageUrlInput('');
     setImageAltInput('');
-    setPreviewError(false);
     setErrorMsg(null);
-  };
-
-  const handleRemoveImage = (id: string) => {
-    setImages((prev) => prev.filter((img) => img.id !== id));
-  };
-
-  const handleClearAllImages = () => {
-    if (window.confirm('Are you sure you want to remove all banner images?')) {
-      setImages([]);
-    }
-  };
-
-  const handleMoveUp = (index: number) => {
-    if (index === 0) return;
-    setImages((prev) => {
-      const next = [...prev];
-      const temp = next[index - 1];
-      next[index - 1] = next[index];
-      next[index] = temp;
-      return next;
-    });
-  };
-
-  const handleMoveDown = (index: number) => {
-    if (index === images.length - 1) return;
-    setImages((prev) => {
-      const next = [...prev];
-      const temp = next[index + 1];
-      next[index + 1] = next[index];
-      next[index] = temp;
-      return next;
-    });
-  };
-
-  const handleAltChange = (id: string, newAlt: string) => {
-    setImages((prev) =>
-      prev.map((img) => (img.id === id ? { ...img, alt: newAlt } : img))
-    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Check if user has an un-added image in the URL input
-    const finalImages = [...images];
+    let finalImages = [...images];
+
+    // Check if user entered URL that needs applying
     if (
       inputMode === 'url' &&
       imageUrlInput.trim() &&
       (imageUrlInput.startsWith('http://') || imageUrlInput.startsWith('https://'))
     ) {
-      finalImages.push({
-        id: `${Date.now()}`,
-        url: imageUrlInput.trim(),
-        alt: imageAltInput.trim() || `Banner ${images.length + 1}`,
-        isUploaded: false,
-      });
+      finalImages = [
+        {
+          id: 'url-image',
+          url: imageUrlInput.trim(),
+          alt: imageAltInput.trim() || 'Banner image',
+          isUploaded: false,
+        },
+      ];
     }
 
     if (finalImages.length === 0) {
-      errorToast('Please upload or add at least one banner image.');
-      setErrorMsg('At least one banner image is required.');
+      errorToast('Please upload or provide 1 banner image.');
+      setErrorMsg('1 banner image is required.');
+      return;
+    }
+
+    // Validate only 1 image at a time
+    if (finalImages.length > 1) {
+      errorToast('Please upload only 1 image at a time.');
+      setErrorMsg('Please upload only 1 image at a time.');
       return;
     }
 
@@ -324,10 +347,10 @@ export default function BannerEditorModal({
     setErrorMsg(null);
 
     try {
-      // Serialize to array of <img src="..." alt="..." /> as specified in API contract
-      const serializedBannerImages = finalImages.map((img) =>
-        formatBannerImageTag(img.url, img.alt)
-      );
+      // Serialize single banner image tag: <img src="..." alt="..." />
+      const serializedBannerImages = [
+        formatBannerImageTag(finalImages[0].url, finalImages[0].alt),
+      ];
 
       const payload: AnnouncementInput = {
         subject: subject.trim() || null,
@@ -375,7 +398,7 @@ export default function BannerEditorModal({
                 {isEditing ? 'Edit Banner Announcement' : 'Create Banner Announcement'}
               </h2>
               <p className="text-xs text-slate-500">
-                Upload images or paste URLs to display promotional carousel banners in the mobile app
+                Upload 1 promotional banner image to display on the mobile app home screen
               </p>
             </div>
           </div>
@@ -401,7 +424,7 @@ export default function BannerEditorModal({
           )}
 
           {/* Subject Field (Optional) */}
-          <div>
+          {/* <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
                 Subject / Title
@@ -417,10 +440,10 @@ export default function BannerEditorModal({
               placeholder="e.g. Christmas Service 2026 / சிறப்பு ஆராதனை"
               className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 placeholder:text-slate-400"
             />
-          </div>
+          </div> */}
 
           {/* Description Field (Optional) */}
-          <div>
+          {/* <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
                 Description / Message
@@ -436,37 +459,35 @@ export default function BannerEditorModal({
               placeholder="e.g. Join us for a special Christmas celebration with praise and worship!"
               className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 placeholder:text-slate-400 leading-relaxed"
             />
-          </div>
+          </div> */}
 
-          {/* Banner Images Section (Required) */}
+          {/* Banner Image Section (Required - 1 image at a time) */}
           <div className="space-y-3 pt-2 border-t border-slate-100">
             <div className="flex items-center justify-between">
               <div>
                 <label className="text-xs font-semibold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
                   <ImageIcon className="w-4 h-4 text-sky-600" />
-                  Banner Images *
+                  Banner Image *
                 </label>
                 <p className="text-[11px] text-slate-500 mt-0.5">
-                  Upload multiple photos from your device or paste web links
+                  Upload 1 image from your device or paste an image web link
                 </p>
               </div>
-              <div className="flex items-center gap-2">
-                {images.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={handleClearAllImages}
-                    className="text-[11px] text-rose-600 hover:text-rose-700 hover:underline font-medium"
-                  >
-                    Clear All
-                  </button>
+              <div>
+                {images.length === 1 ? (
+                  <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 flex items-center gap-1">
+                    <Check className="w-3.5 h-3.5" />
+                    1 Image Selected
+                  </span>
+                ) : (
+                  <span className="text-xs font-medium text-slate-400 bg-slate-100 px-2.5 py-1 rounded-full border border-slate-200">
+                    No image selected
+                  </span>
                 )}
-                <span className="text-xs font-bold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-full border border-sky-200">
-                  {images.length} added
-                </span>
               </div>
             </div>
 
-            {/* Segmented Mode Control: Upload Files vs Paste URL */}
+            {/* Segmented Mode Control: Upload File vs Paste URL */}
             <div className="flex p-1 bg-slate-100 rounded-xl border border-slate-200/80 max-w-sm">
               <button
                 type="button"
@@ -494,7 +515,7 @@ export default function BannerEditorModal({
               </button>
             </div>
 
-            {/* Mode 1: Drag & Drop File Upload */}
+            {/* Mode 1: Drag & Drop File Upload (Strictly 1 image at a time) */}
             {inputMode === 'upload' && (
               <div
                 onDragOver={handleDragOver}
@@ -507,11 +528,11 @@ export default function BannerEditorModal({
                     : 'border-slate-300 hover:border-sky-400 bg-slate-50/60 hover:bg-sky-50/30'
                 }`}
               >
+                {/* Single file input - multiple removed */}
                 <input
                   ref={fileInputRef}
                   type="file"
                   accept="image/*"
-                  multiple
                   onChange={(e) => {
                     if (e.target.files && e.target.files.length > 0) {
                       processSelectedFiles(e.target.files);
@@ -524,7 +545,7 @@ export default function BannerEditorModal({
                   <div className="py-3 flex flex-col items-center gap-2">
                     <Loader2 className="w-8 h-8 text-sky-600 animate-spin" />
                     <span className="text-xs font-semibold text-slate-700">
-                      Optimizing and preparing images...
+                      Optimizing and preparing image...
                     </span>
                   </div>
                 ) : (
@@ -533,14 +554,14 @@ export default function BannerEditorModal({
                       <UploadCloud className="w-6 h-6" />
                     </div>
                     <div className="text-xs sm:text-sm font-bold text-slate-800 group-hover:text-sky-700 transition-colors">
-                      Click to browse or drag & drop images here
+                      Click to browse or drag & drop 1 image here
                     </div>
                     <p className="text-[11px] text-slate-500 mt-1 max-w-xs leading-relaxed">
-                      Select one or multiple images at once (PNG, JPG, WebP, GIF). High-res photos are automatically optimized.
+                      Upload 1 image (PNG, JPG, WebP, GIF). High-res photos are automatically optimized.
                     </p>
                     <div className="mt-3 flex items-center gap-2 text-[10px] text-slate-400">
                       <span className="px-2 py-0.5 rounded bg-white border border-slate-200">
-                        Multiple files supported
+                        1 image at a time
                       </span>
                       <span>·</span>
                       <span>Paste from clipboard (Ctrl+V)</span>
@@ -550,7 +571,7 @@ export default function BannerEditorModal({
               </div>
             )}
 
-            {/* Mode 2: Paste URL Input */}
+            {/* Mode 2: Paste URL Input (Add+ button removed - auto-syncs to banner image) */}
             {inputMode === 'url' && (
               <div className="p-3.5 rounded-2xl bg-sky-50/50 border border-sky-100/80 space-y-3">
                 <div className="text-xs font-semibold text-sky-900 flex items-center gap-1.5">
@@ -569,23 +590,14 @@ export default function BannerEditorModal({
                     />
                   </div>
 
-                  <div className="flex gap-2">
+                  <div>
                     <input
                       type="text"
                       value={imageAltInput}
-                      onChange={(e) => setImageAltInput(e.target.value)}
-                      placeholder="Image Alt Text (e.g. Christmas Service Banner)"
-                      className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-xl text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 placeholder:text-slate-400"
+                      onChange={(e) => handleAltChange(e.target.value)}
+                      placeholder="Image Alt Text / Label (e.g. Christmas Service Banner)"
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 placeholder:text-slate-400"
                     />
-                    <button
-                      type="button"
-                      onClick={handleAddUrlImage}
-                      disabled={!imageUrlInput.trim()}
-                      className="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 disabled:opacity-40 text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm transition-all"
-                    >
-                      <Plus className="w-3.5 h-3.5" />
-                      <span>Add</span>
-                    </button>
                   </div>
                 </div>
 
@@ -611,7 +623,7 @@ export default function BannerEditorModal({
                       ) : (
                         <span className="text-emerald-700 font-medium flex items-center gap-1">
                           <Check className="w-3.5 h-3.5" />
-                          Image URL verified.
+                          Image URL verified and set as banner image.
                         </span>
                       )}
                     </div>
@@ -620,93 +632,65 @@ export default function BannerEditorModal({
               </div>
             )}
 
-            {/* List of Added / Uploaded Images */}
+            {/* Single Selected Banner Image Card */}
             {images.length > 0 ? (
-              <div className="space-y-2 max-h-60 overflow-y-auto pr-1 pt-1">
+              <div className="space-y-2 pt-1">
                 <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider px-1">
-                  Selected Carousel Images ({images.length})
+                  Selected Banner Image
                 </div>
-                {images.map((img, idx) => (
-                  <div
-                    key={img.id}
-                    className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/90 hover:border-sky-300 transition-colors flex items-center justify-between gap-3 group"
-                  >
-                    {/* Thumbnail Preview */}
-                    <div className="relative w-16 h-12 rounded-lg bg-slate-200 overflow-hidden shrink-0 border border-slate-300/80">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={img.url}
-                        alt={img.alt || 'Banner thumbnail'}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src =
-                            'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="48" fill="%23cbd5e1"><rect width="100%" height="100%" fill="%23f1f5f9"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="9" fill="%2394a3b8">Error</text></svg>';
-                        }}
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/90 hover:border-sky-300 transition-colors flex items-center justify-between gap-3 group">
+                  {/* Thumbnail Preview */}
+                  <div className="relative w-20 h-14 rounded-lg bg-slate-200 overflow-hidden shrink-0 border border-slate-300/80">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={images[0].url}
+                      alt={images[0].alt || 'Banner thumbnail'}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src =
+                          'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="48" fill="%23cbd5e1"><rect width="100%" height="100%" fill="%23f1f5f9"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="9" fill="%2394a3b8">Error</text></svg>';
+                      }}
+                    />
+                  </div>
+
+                  {/* Info & Alt Text Input */}
+                  <div className="min-w-0 flex-1 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={images[0].alt}
+                        onChange={(e) => handleAltChange(e.target.value)}
+                        placeholder="Image label / Alt text"
+                        className="text-xs font-semibold text-slate-800 bg-transparent border-b border-transparent hover:border-slate-300 focus:border-sky-500 focus:outline-none w-full truncate py-0.5"
                       />
-                      <span className="absolute bottom-0.5 right-0.5 px-1 rounded text-[9px] font-bold bg-slate-900/70 text-white font-mono">
-                        #{idx + 1}
+                    </div>
+                    <div className="flex items-center gap-2 text-[10px] text-slate-400 font-mono">
+                      <span className="flex items-center gap-1">
+                        <FileImage className="w-3 h-3 text-slate-400" />
+                        {images[0].isUploaded ? 'Uploaded File' : 'Web URL'}
+                      </span>
+                      <span>·</span>
+                      <span className="truncate max-w-[200px]">
+                        {images[0].isUploaded ? 'Optimized Image' : images[0].url}
                       </span>
                     </div>
-
-                    {/* Info & Alt Text Input */}
-                    <div className="min-w-0 flex-1 space-y-1">
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="text"
-                          value={img.alt}
-                          onChange={(e) => handleAltChange(img.id, e.target.value)}
-                          placeholder="Image label / Alt text"
-                          className="text-xs font-semibold text-slate-800 bg-transparent border-b border-transparent hover:border-slate-300 focus:border-sky-500 focus:outline-none w-full truncate py-0.5"
-                        />
-                      </div>
-                      <div className="flex items-center gap-2 text-[10px] text-slate-400 font-mono">
-                        <span className="flex items-center gap-1">
-                          <FileImage className="w-3 h-3 text-slate-400" />
-                          {img.isUploaded ? 'Uploaded File' : 'Web URL'}
-                        </span>
-                        <span>·</span>
-                        <span className="truncate max-w-[180px]">
-                          {img.isUploaded ? 'Data URL (Ready)' : img.url}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Actions: Reorder & Remove */}
-                    <div className="flex items-center gap-1 shrink-0">
-                      <button
-                        type="button"
-                        onClick={() => handleMoveUp(idx)}
-                        disabled={idx === 0}
-                        title="Move Up"
-                        className="p-1 rounded text-slate-400 hover:text-slate-700 disabled:opacity-20 transition-opacity"
-                      >
-                        <ChevronUp className="w-4 h-4" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleMoveDown(idx)}
-                        disabled={idx === images.length - 1}
-                        title="Move Down"
-                        className="p-1 rounded text-slate-400 hover:text-slate-700 disabled:opacity-20 transition-opacity"
-                      >
-                        <ChevronDown className="w-4 h-4" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveImage(img.id)}
-                        title="Remove Image"
-                        className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 transition-colors"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
                   </div>
-                ))}
+
+                  {/* Action: Remove */}
+                  <button
+                    type="button"
+                    onClick={handleRemoveImage}
+                    title="Remove Image"
+                    className="p-2 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 transition-colors shrink-0 cursor-pointer"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             ) : (
               <div className="p-4 rounded-xl bg-amber-50/70 border border-amber-200/80 text-amber-800 text-xs flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
-                <span>No images added yet. Please upload or paste at least one image banner.</span>
+                <span>No image selected yet. Please upload 1 image banner or enter an image URL.</span>
               </div>
             )}
 
@@ -714,7 +698,7 @@ export default function BannerEditorModal({
             <div className="flex items-start gap-2 p-3 rounded-xl bg-slate-50 border border-slate-200/60 text-[11px] text-slate-600">
               <HelpCircle className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
               <span>
-                Recommended banner aspect ratio: <strong>16:9</strong> (landscape) or <strong>2:1</strong>. When multiple images are added, the congregation mobile app slides between them automatically.
+                Recommended banner aspect ratio: <strong>16:9</strong> (landscape) or <strong>2:1</strong>. Displayed prominently at the top of the mobile app home screen.
               </span>
             </div>
           </div>
@@ -723,14 +707,14 @@ export default function BannerEditorModal({
         {/* Modal Footer */}
         <div className="flex items-center justify-between p-4 border-t border-slate-100 bg-slate-50/70 rounded-b-2xl">
           <span className="text-xs text-slate-500 font-mono">
-            {images.length} {images.length === 1 ? 'image' : 'images'} in banner
+            {images.length === 1 ? '1 image selected (Ready)' : '1 banner image required'}
           </span>
           <div className="flex items-center gap-2.5">
             <button
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="px-4 py-2 text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors"
+              className="px-4 py-2 text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
             >
               Cancel
             </button>
@@ -738,7 +722,7 @@ export default function BannerEditorModal({
               type="submit"
               form="banner-form"
               disabled={isSubmitting || images.length === 0}
-              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 via-sky-600 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-semibold text-xs shadow-md shadow-sky-500/20 flex items-center gap-2 transition-all disabled:opacity-50"
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 via-sky-600 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-semibold text-xs shadow-md shadow-sky-500/20 flex items-center gap-2 transition-all disabled:opacity-50 cursor-pointer"
             >
               {isSubmitting ? (
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />

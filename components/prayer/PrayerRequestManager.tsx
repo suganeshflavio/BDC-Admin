@@ -26,6 +26,7 @@ import {
   ShieldCheck,
   Info,
   AlertCircle,
+  // MapPin,
   X,
 } from 'lucide-react';
 
@@ -270,7 +271,7 @@ export default function PrayerRequestManager() {
           <p className="text-[11px] text-slate-400 mt-0.5">Completed</p>
         </div>
 
-        <div className="glass-panel p-4 rounded-2xl border border-indigo-100 bg-white/80">
+        {/*<div className="glass-panel p-4 rounded-2xl border border-indigo-100 bg-white/80">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-indigo-700">Voice Notes</span>
             <div className="p-2 rounded-xl bg-indigo-100 text-indigo-700">
@@ -281,7 +282,7 @@ export default function PrayerRequestManager() {
             {voiceNotesCount}
           </div>
           <p className="text-[11px] text-slate-400 mt-0.5">Audio recordings</p>
-        </div>
+        </div>*/}
       </div>
 
       {/* Filter and Search Bar */}
@@ -401,6 +402,7 @@ export default function PrayerRequestManager() {
             const isThisAudioPlaying = activeAudioUrl === req.voice_note_url && isPlaying;
             const displayName = req.name || req.user?.name || 'Anonymous';
             const displayPhone = req.mobile || req.user?.phone || null;
+            const displayLocation = req.location || 'Unknown';
 
             return (
               <div
@@ -461,6 +463,13 @@ export default function PrayerRequestManager() {
                         )}
                       </span>
 
+                      {/* location */}
+                      {displayLocation && (
+                        <span className="text-xs bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200/70 text-slate-600">
+                          {displayLocation}
+                        </span>
+                      )}
+
                       {/* Contact Phone */}
                       {displayPhone && (
                         <div className="flex items-center gap-1 text-xs text-slate-600 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200/70">
@@ -500,7 +509,7 @@ export default function PrayerRequestManager() {
                     </div>
 
                     {/* Device & User Footer Badges */}
-                    <div className="flex flex-wrap items-center gap-2 pt-1">
+                    {/* <div className="flex flex-wrap items-center gap-2 pt-1">
                       {req.device_id && (
                         <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-slate-100/90 text-[10px] text-slate-600 font-mono">
                           <Smartphone className="w-3 h-3 text-slate-400" />
@@ -525,7 +534,7 @@ export default function PrayerRequestManager() {
                           <span>{req.user.email}</span>
                         </div>
                       )}
-                    </div>
+                    </div> */}
                   </div>
 
                   {/* Right Column: Audio & Actions */}
@@ -573,7 +582,7 @@ export default function PrayerRequestManager() {
                           handleStatusChange(req, isPrayed ? 'pending' : 'prayed_for')
                         }
                         disabled={isUpdatingId === req.id}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-sm ${
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer ${
                           isPrayed
                             ? 'bg-slate-100 hover:bg-slate-200 text-slate-700'
                             : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-600/20'
@@ -657,7 +666,7 @@ export default function PrayerRequestManager() {
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-slate-900">Prayer Request Details</h3>
-                  <span className="text-xs text-slate-400">ID #{detailItem.id}</span>
+                  {/* <span className="text-xs text-slate-400">ID #{detailItem.id}</span> */}
                 </div>
               </div>
               <button
@@ -744,7 +753,7 @@ export default function PrayerRequestManager() {
               )}
 
               {/* Technical identifiers */}
-              <div className="space-y-1.5 pt-2 border-t border-slate-100 text-[11px] text-slate-500 font-mono">
+              {/* <div className="space-y-1.5 pt-2 border-t border-slate-100 text-[11px] text-slate-500 font-mono">
                 {detailItem.device_id && (
                   <div className="flex items-center justify-between">
                     <span>Device ID:</span>
@@ -761,7 +770,7 @@ export default function PrayerRequestManager() {
                     </span>
                   </div>
                 )}
-              </div>
+              </div> */}
             </div>
 
             <div className="flex items-center justify-between pt-3 border-t border-slate-100">

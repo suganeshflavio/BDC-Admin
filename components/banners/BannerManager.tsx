@@ -345,11 +345,11 @@ export default function BannerManager({
                       ) : (
                         <span className="text-[11px] text-slate-400">Banner #{item.id}</span>
                       )}
-                      <span className="font-mono text-[10px] text-slate-400">ID #{item.id}</span>
+                      {/* <span className="font-mono text-[10px] text-slate-400">ID #{item.id}</span> */}
                     </div>
 
                     {/* Subject */}
-                    {item.subject ? (
+                    {/* {item.subject ? (
                       <h3 className="text-sm sm:text-base font-bold text-slate-900 leading-snug line-clamp-2">
                         {item.subject}
                       </h3>
@@ -357,10 +357,10 @@ export default function BannerManager({
                       <div className="inline-flex items-center gap-1.5 text-xs text-slate-400 italic">
                         <span>(No subject title)</span>
                       </div>
-                    )}
+                    )} */}
 
                     {/* Description */}
-                    {item.description ? (
+                    {/* {item.description ? (
                       <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed">
                         {item.description}
                       </p>
@@ -368,14 +368,14 @@ export default function BannerManager({
                       <p className="text-[11px] text-slate-400 italic">
                         No description provided.
                       </p>
-                    )}
+                    )} */}
                   </div>
 
                   {/* Card Actions Footer */}
                   <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-                    <span className="text-[11px] text-slate-400 font-mono truncate max-w-[140px]">
+                    {/* <span className="text-[11px] text-slate-400 font-mono truncate max-w-[140px]">
                       {currentImg.alt || 'Promotional Banner'}
-                    </span>
+                    </span> */}
 
                     <div className="flex items-center gap-1.5">
                       <button
@@ -383,14 +383,14 @@ export default function BannerManager({
                           setEditingItem(item);
                           setIsEditorOpen(true);
                         }}
-                        className="p-2 rounded-xl bg-slate-100 hover:bg-sky-50 text-slate-600 hover:text-sky-700 transition-colors"
+                        className="p-2 rounded-xl bg-slate-100 hover:bg-sky-50 text-slate-600 hover:text-sky-700 transition-colors cursor-pointer"
                         title="Edit Banner"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => setDeletingItem(item)}
-                        className="p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 transition-colors"
+                        className="p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 transition-colors cursor-pointer"
                         title="Delete Banner"
                       >
                         <Trash2 className="w-3.5 h-3.5" />

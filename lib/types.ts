@@ -210,6 +210,7 @@ export interface PrayerRequest {
   voice_note_url?: string | null;
   status: 'pending' | 'prayed_for' | string;
   device_id?: string;
+  location?: string | null;
   created_at?: string;
   user_id?: number | null;
   user?: PrayerRequestUser | null;
