@@ -38,7 +38,7 @@ export default function Navbar({ onOpenSettings, onAddNewSong }: NavbarProps) {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight">
-                பரமனின் கீதங்கள்
+                BDC Family
               </h1>
               <span className="hidden xs:inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-sky-50 text-sky-700 border border-sky-200">
                 Admin

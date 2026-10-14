@@ -53,7 +53,7 @@ export default function LoginScreen({ onOpenSettings }: LoginScreenProps) {
             </div>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
-            பரமனின் கீதங்கள்
+            BDC Family
           </h1>
           <p className="text-sm text-sky-700 font-medium mt-1">
             Bethesda Deliverance Church — Admin Portal

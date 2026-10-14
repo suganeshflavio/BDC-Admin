@@ -49,7 +49,7 @@ export default function Home() {
           </div>
 
           <h2 className="text-slate-900 font-bold text-base sm:text-lg mt-5 tracking-tight">
-            பரமனின் கீதங்கள்
+            BDC Family
           </h2>
           <p className="text-xs text-sky-700 mt-1 font-medium tracking-wide">
             Connecting to Bethesda Church Portal...

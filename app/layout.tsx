@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'பரமனின் கீதங்கள் — Bethesda Church Admin Portal',
+  title: 'BDC Family — Bethesda Church Admin Portal',
   description: 'Administration panel for Bethesda Deliverance Church Song Book, Notifications, Ministry information, and User Management.',
   icons: {
     icon: [
