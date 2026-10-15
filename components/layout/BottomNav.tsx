@@ -6,6 +6,7 @@ import {
   Music,
   Bell,
   Building2,
+  Users,
   ImageIcon,
   HandHeart,
   MessageSquareQuote,
@@ -30,6 +31,7 @@ export default function BottomNav({
   notificationsCount = 0,
   prayerRequestsCount = 0,
   bannersCount = 0,
+  usersCount = 0,
   feedbackCount = 0,
 }: BottomNavProps) {
   const tabs = [
@@ -67,6 +69,12 @@ export default function BottomNav({
       label: 'Banners',
       icon: ImageIcon,
       badge: bannersCount > 0 ? bannersCount : undefined,
+    },
+    {
+      id: 'users' as NavTab,
+      label: 'Admin Users',
+      icon: Users,
+      badge: usersCount > 0 ? usersCount : undefined,
     },
     {
       id: 'about' as NavTab,

@@ -182,7 +182,7 @@ export default function BannerManager({
       </div>
 
       {/* Search Bar */}
-      <div className="relative max-w-md">
+      {/* <div className="relative max-w-md">
         <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
         <input
           type="text"
@@ -191,10 +191,10 @@ export default function BannerManager({
           placeholder="Filter by subject, description, or image link..."
           className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-900 text-xs sm:text-sm placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 shadow-sm transition-all"
         />
-      </div>
+      </div> */}
 
       {/* Fetch Error Banner */}
-      {fetchError && (
+      {/* {fetchError && (
         <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-amber-900">
           <div className="text-xs">
             <span className="font-semibold">Unable to fetch announcements: </span>
@@ -207,7 +207,7 @@ export default function BannerManager({
             Try Again
           </button>
         </div>
-      )}
+      )} */}
 
       {/* Content Area */}
       {isLoading && announcements.length === 0 ? (
