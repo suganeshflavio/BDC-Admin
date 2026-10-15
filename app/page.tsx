@@ -82,6 +82,7 @@ export default function Home() {
           setOpenCreateSong(true);
         }}
         activeTab={activeTab}
+        onSelectTab={setActiveTab}
       />
 
       {/* Main Shell */}
@@ -93,7 +94,7 @@ export default function Home() {
         />
 
         {/* Dynamic Content Page Area */}
-        <main className="flex-1 p-3 sm:p-6 lg:p-8 min-w-0 max-w-full overflow-x-hidden">
+        <main className="flex-1 p-3 sm:p-6 lg:p-8 min-w-0 max-w-full overflow-x-hidden pb-24 md:pb-8">
           {activeTab === 'dashboard' && (
             <DashboardOverview
               onNavigate={setActiveTab}

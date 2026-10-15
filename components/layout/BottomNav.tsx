@@ -4,9 +4,6 @@ import React from 'react';
 import {
   LayoutDashboard,
   Music,
-  Bell,
-  Building2,
-  Users,
   ImageIcon,
   HandHeart,
   MessageSquareQuote,
@@ -28,11 +25,9 @@ export default function BottomNav({
   activeTab,
   onSelectTab,
   songsCount = 0,
-  notificationsCount = 0,
   prayerRequestsCount = 0,
-  bannersCount = 0,
-  usersCount = 0,
   feedbackCount = 0,
+  bannersCount = 0,
 }: BottomNavProps) {
   const tabs = [
     {
@@ -59,33 +54,16 @@ export default function BottomNav({
       badge: feedbackCount > 0 ? feedbackCount : undefined,
     },
     {
-      id: 'notifications' as NavTab,
-      label: 'Alerts',
-      icon: Bell,
-      badge: notificationsCount > 0 ? notificationsCount : undefined,
-    },
-    {
       id: 'banners' as NavTab,
       label: 'Banners',
       icon: ImageIcon,
       badge: bannersCount > 0 ? bannersCount : undefined,
     },
-    {
-      id: 'users' as NavTab,
-      label: 'Admin Users',
-      icon: Users,
-      badge: usersCount > 0 ? usersCount : undefined,
-    },
-    {
-      id: 'about' as NavTab,
-      label: 'Church',
-      icon: Building2,
-    },
   ];
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-sky-100 pb-safe shadow-xl">
-      <div className="flex items-center justify-around h-16 px-2">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-sky-100 pb-[max(env(safe-area-inset-bottom),0.35rem)] shadow-lg shadow-sky-950/5">
+      <div className="flex items-center justify-around h-16 px-1">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -94,7 +72,7 @@ export default function BottomNav({
               key={tab.id}
               onClick={() => onSelectTab(tab.id)}
               className={`relative flex flex-col items-center justify-center flex-1 h-full py-1 transition-all ${
-                isActive ? 'text-sky-600' : 'text-slate-400 hover:text-sky-600'
+                isActive ? 'text-sky-600' : 'text-slate-400 hover:text-sky-600 active:scale-95'
               }`}
             >
               {/* Active indicator bar at top */}
@@ -103,7 +81,11 @@ export default function BottomNav({
               )}
 
               <div className="relative">
-                <Icon className={`w-5 h-5 transition-transform ${isActive ? 'scale-110 text-sky-600' : ''}`} />
+                <Icon
+                  className={`w-5 h-5 transition-transform duration-200 ${
+                    isActive ? 'scale-110 text-sky-600' : 'text-slate-400'
+                  }`}
+                />
                 {tab.badge !== undefined && (
                   <span className="absolute -top-1.5 -right-2.5 px-1.5 py-0.2 rounded-full text-[9px] font-extrabold bg-lime-400 text-slate-950 min-w-[16px] text-center border border-white shadow-sm">
                     {tab.badge}
@@ -111,7 +93,11 @@ export default function BottomNav({
                 )}
               </div>
 
-              <span className={`text-[10px] mt-1 font-medium ${isActive ? 'text-slate-900 font-bold' : ''}`}>
+              <span
+                className={`text-[11px] mt-1 tracking-tight transition-colors ${
+                  isActive ? 'text-slate-900 font-bold' : 'text-slate-500 font-medium'
+                }`}
+              >
                 {tab.label}
               </span>
             </button>

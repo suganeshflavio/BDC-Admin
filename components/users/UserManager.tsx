@@ -313,7 +313,7 @@ export default function UserManager() {
                   {/* User Contact Details */}
                   <div className="mt-4 space-y-2 text-xs">
                     {/* Email */}
-                    <div className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+                    {/* <div className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
                       <div className="flex items-center gap-2 min-w-0">
                         <Mail className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                         <span className="text-slate-700 truncate">{user.email}</span>
@@ -330,7 +330,7 @@ export default function UserManager() {
                           <Copy className="w-3.5 h-3.5" />
                         )}
                       </button>
-                    </div>
+                    </div> */}
 
                     {/* Phone */}
                     {user.phone && (
