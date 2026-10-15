@@ -6,6 +6,7 @@ import {
   Music,
   Bell,
   Building2,
+  ImageIcon,
   HandHeart,
   MessageSquareQuote,
 } from 'lucide-react';
@@ -28,6 +29,7 @@ export default function BottomNav({
   songsCount = 0,
   notificationsCount = 0,
   prayerRequestsCount = 0,
+  bannersCount = 0,
   feedbackCount = 0,
 }: BottomNavProps) {
   const tabs = [
@@ -60,12 +62,12 @@ export default function BottomNav({
       icon: Bell,
       badge: notificationsCount > 0 ? notificationsCount : undefined,
     },
-    // {
-    //   id: 'banners' as NavTab,
-    //   label: 'Banners',
-    //   icon: ImageIcon,
-    //   badge: bannersCount > 0 ? bannersCount : undefined,
-    // },
+    {
+      id: 'banners' as NavTab,
+      label: 'Banners',
+      icon: ImageIcon,
+      badge: bannersCount > 0 ? bannersCount : undefined,
+    },
     {
       id: 'about' as NavTab,
       label: 'Church',
